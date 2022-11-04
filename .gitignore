@@ -1,0 +1,9 @@
+# pycharm
+venv
+
+# pyinstaller
+build
+dist
+*.spec
+
+이음
