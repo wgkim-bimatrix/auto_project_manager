@@ -173,12 +173,16 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
                 if card_number == candidate_card_number.text[-4:]:
                     candidate_card_number.click()
                     break
+            else:
+                raise Exception(f'{card_number} 카드번호가 존재하지 않음')
+
 
             time.sleep(2)
             for _ in range(3):
                 search = driver.find_element(By.CSS_SELECTOR,
                                              '#contents > div > div:nth-child(2) > div.card_info > div.btn_wrap > a')
                 search.click()
+
                 time.sleep(0.5)
 
             print(f"\r2-1. {project_name} {card_number} 카드검색 완료")
@@ -268,7 +272,7 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
                                                '#contents > div > div.conts_box.list_detail > ul > li.li.on > div.check_txt > div > p > a:nth-child(1)'
                                                )
                     slip.click()
-                    time.sleep(2)
+                    time.sleep(3)
 
                     driver.execute_script(f"""document.querySelector("#popup_stment > article").style.marginTop=''""")
                     driver.execute_script(
