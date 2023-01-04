@@ -1,4 +1,5 @@
 import time
+
 t1 = time.time()
 
 import glob
@@ -109,6 +110,7 @@ def num2char(num: int):
     char += chr(65 - start_idx + (int(num)))
     return char
 
+
 def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
     card_group = all_card_list.get(card_type)
     if not card_group:
@@ -176,7 +178,6 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
             else:
                 raise Exception(f'{card_number} 카드번호가 존재하지 않음')
 
-
             time.sleep(2)
             for _ in range(3):
                 search = driver.find_element(By.CSS_SELECTOR,
@@ -240,16 +241,18 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
 
                 # region 2-3. 매출전표 조회화면(2)
                 print(f"2-3. {project_name} {card_number} 카드 매출전표 리스트업", end="")
-                more_wrapper = driver.find_element(By.CSS_SELECTOR,
-                                                   '#contents > div > div.conts_box.list_detail > div:nth-child(4)')
-                while 'display: block;' in more_wrapper.get_attribute('style'):
+                # more_wrapper = driver.find_element(By.CSS_SELECTOR,
+                #                                    '#contents > div > div.conts_box.list_detail > div:nth-child(4)')
+                # while 'display: block;' in more_wrapper.get_attribute('style'):
+                used_count = int(driver.find_element(By.CSS_SELECTOR, '#contents > div > div.conts_box.card_user > div:nth-child(2) > p.total_num > strong').text)
+                for _ in range(used_count // 25):
                     more_button = driver.find_element(By.CSS_SELECTOR,
                                                       '#contents > div > div.conts_box.list_detail > div:nth-child(4) > button')
                     more_button.click()
-                    time.sleep(1)
+                    time.sleep(2)
 
-                used_count = int(driver.find_element(By.CSS_SELECTOR,
-                                                     '#contents > div > div.conts_box.list_detail > div.accord_first.m_none.c_first > div > label > span > span.total').text)
+                # used_count = int(driver.find_element(By.CSS_SELECTOR,
+                #                                      '#contents > div > div.conts_box.list_detail > div.accord_first.m_none.c_first > div > label > span > span.total').text)
                 print(f"\r2-3. {project_name} {card_number} 카드 매출전표 리스트업 완료")
                 # endregion 2-3. 매출전표 조회화면(2)
 
@@ -305,7 +308,7 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
                                                     '#popup_stment > article > div.pop_cont.pop_stment.check.pop_sales01 > div'
                                                     )
                     time.sleep(1)
-                    slip_area.screenshot(f'{specific_download_path}/{used_date} {shop_name}.png')
+                    slip_area.screenshot(f'{specific_download_path}/{i:03d}. {used_date} {shop_name}.png')
                     driver.execute_script(
                         f"""document.querySelector("#popup_stment > article > button").style.display = 'block'""")
 
