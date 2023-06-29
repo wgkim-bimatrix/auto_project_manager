@@ -125,6 +125,10 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
     monthly_button.click()
     time.sleep(0.5)
 
+    region = driver.find_element(By.XPATH, '//*[@id="contents"]/div/div[2]/div[2]/div[2]/form/div[4]/div/ul/li[4]/div/div/label[3]/span')
+    region.click()
+    time.sleep(0.5)
+
     select_month = Select(driver.find_element(By.CSS_SELECTOR, '#selMonth'))
     select_month.select_by_value(f'{last_year_of_last_month}{last_month:02d}')
     time.sleep(0.5)
