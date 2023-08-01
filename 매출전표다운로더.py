@@ -66,7 +66,7 @@ options.add_experimental_option("detach", True)
 options.add_argument("--start-fullscreen")
 # options.add_argument("--window-size=1920,1080")
 options.add_experimental_option('prefs', {'download.default_directory': download_path})
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager(version='114.0.5735.90').install()), options=options)
 driver.get('https://www.shinhancard.com/cconts/html/main.html')
 time.sleep(1)
 
@@ -125,7 +125,8 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
     monthly_button.click()
     time.sleep(0.5)
 
-    region = driver.find_element(By.XPATH, '//*[@id="contents"]/div/div[2]/div[2]/div[2]/form/div[4]/div/ul/li[4]/div/div/label[3]/span')
+    region = driver.find_element(By.XPATH,
+                                 '//*[@id="contents"]/div/div[2]/div[2]/div[2]/form/div[4]/div/ul/li[4]/div/div/label[3]/span')
     region.click()
     time.sleep(0.5)
 
@@ -248,7 +249,8 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
                 # more_wrapper = driver.find_element(By.CSS_SELECTOR,
                 #                                    '#contents > div > div.conts_box.list_detail > div:nth-child(4)')
                 # while 'display: block;' in more_wrapper.get_attribute('style'):
-                used_count = int(driver.find_element(By.CSS_SELECTOR, '#contents > div > div.conts_box.card_user > div:nth-child(2) > p.total_num > strong').text)
+                used_count = int(driver.find_element(By.CSS_SELECTOR,
+                                                     '#contents > div > div.conts_box.card_user > div:nth-child(2) > p.total_num > strong').text)
                 for _ in range(used_count // 25):
                     more_button = driver.find_element(By.CSS_SELECTOR,
                                                       '#contents > div > div.conts_box.list_detail > div:nth-child(4) > button')
@@ -264,9 +266,10 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
                 print(f"2-4. {project_name} {card_number} 카드 매출전표 다운로드", end="")
                 for i in range(used_count):
                     time.sleep(1)
+
                     used_date = driver.find_element(By.CSS_SELECTOR,
-                                                    f'#contents > div > div.conts_box.list_detail > ul > li:nth-child({1 + 2 * i}) > div.check_btn > p:nth-child(3) > span.date').text
-                    used_date = f"""{used_date[:10].replace('.', '-')} {used_date[12:14]}h{used_date[15:17]}m"""
+                                                    f'#contents > div > div.conts_box.list_detail > ul > li:nth-child({1 + 2 * i}) > div.check_btn > p:nth-child(2) > span.date').text
+                    used_date = f"""{used_date[:10].replace('.', '-')} {used_date[12:14] or 'xx'}h{used_date[15:17] or 'xx'}m"""
 
                     shop_name = driver.find_element(By.CSS_SELECTOR,
                                                     f'#contents > div > div.conts_box.list_detail > ul > li:nth-child({1 + 2 * i}) > div.check_btn > label > span').text
@@ -318,6 +321,11 @@ def download_slip(card_type: str, excel_sum_card_history: xlwings.Book):
 
                     close_button = driver.find_element(By.CSS_SELECTOR, '#popup_stment > article > button')
                     close_button.click()
+
+                    close_detail = driver.find_element(By.CSS_SELECTOR,
+                                                       '#contents > div > div.conts_box.list_detail > ul > li.li.on > a')
+                    close_detail.click()
+
                 print(f"\r2-4. {project_name} {card_number} 카드 매출전표 다운로드 완료")
                 # endregion 2-4. 매출전표화면
             else:
