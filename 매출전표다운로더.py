@@ -66,7 +66,9 @@ options.add_experimental_option("detach", True)
 options.add_argument("--start-fullscreen")
 # options.add_argument("--window-size=1920,1080")
 options.add_experimental_option('prefs', {'download.default_directory': download_path})
-driver = webdriver.Chrome(service=Service(ChromeDriverManager(version='114.0.5735.90').install()), options=options)
+# FIXME 다음 링크에서 적절한 크롬드라이버 다운로드 : https://googlechromelabs.github.io/chrome-for-testing/
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager(version='116.0.5845.96').install()), options=options)
+driver = webdriver.Chrome('chrome/chromedriver.exe', options=options)
 driver.get('https://www.shinhancard.com/cconts/html/main.html')
 time.sleep(1)
 
